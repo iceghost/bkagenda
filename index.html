@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/@tailwindcss/typography@0.2.x/dist/typography.min.css" />
+    <link rel="stylesheet" href="public/style.css">
+    <script src="public/elm.js"></script>
+    <script>
+        Date.prototype.getWeek = function () {
+            var onejan = new Date(this.getFullYear(), 0, 1);
+            return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+        }
+    </script>
+    <title>Lịch học | BKalendar</title>
+</head>
+
+<body>
+    <div id="app"></div>
+    <script>
+        const today = new Date();
+        const app = Elm.Main.init({
+            node: document.querySelector("#app"),
+            flags: {
+                raw: localStorage.getItem("bkalendar-data") || "",
+                thisWeek: today.getWeek(),
+            }
+        });
+        app.ports.saveData.subscribe(raw => {
+            localStorage.setItem("bkalendar-data", raw);
+        })
+    </script>
+</body>
+
+</html>
