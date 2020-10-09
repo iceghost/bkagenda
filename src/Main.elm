@@ -1,9 +1,11 @@
 port module Main exposing (Model, Msg, init, subscriptions, update, view)
 
 import Browser
+import Heroicons.Outline exposing (chevronLeft, chevronRight, locationMarker)
 import Html exposing (..)
 import Html.Attributes exposing (class, placeholder, preload, value)
 import Html.Events exposing (onClick, onInput)
+import Svg.Attributes as SvgAttr
 import Task exposing (Task)
 import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixToMillis)
 
@@ -185,10 +187,10 @@ example =
 
 view : Model -> Html Msg
 view model =
-    div [ class "min-h-screen min-w-screen" ]
+    div [ class "container mx-auto min-h-screen w-screen" ]
         [ case model.state of
             InputRaw raw ->
-                div [ class "mx-16" ]
+                div []
                     [ label []
                         [ text "Copy nguyên cái bảng vào đây"
                         , textarea
@@ -207,38 +209,60 @@ view model =
                     ]
 
             ViewCourses courses ->
-                let
-                    thisWeek =
-                        posixToWeekNumber model.currentTime
-                in
-                div []
-                    [ div [ class "flex flex-col items-center bg-blue-700 text-white p-2" ]
-                        [ p [ class "text-2xl font-bold" ]
-                            [ text ("Tuần " ++ String.fromInt thisWeek)
+                case courses of
+                    [] ->
+                        div []
+                            [ text "Không đọc được môn nào cả. Vui lòng "
+                            , button [ class "bg-blue-500 px-1 text-white rounded shadow-md", onClick (GotRaw "") ] [ text "nhập lại" ]
+                            , text " bạn nhé"
                             ]
-                        , div [ class "flex gap-3" ]
-                            [ button
-                                [ class "p-1 rounded text-sm bg-white bg-blue-500 border-r-2 border-b-2 border-white"
-                                , onClick PrevWeek
-                                ]
-                                [ text "Tuần trước" ]
-                            , button
-                                [ class "p-1 rounded text-sm bg-white bg-blue-500 border-r-2 border-b-2 border-white"
-                                , onClick NextWeek
-                                ]
-                                [ text "Tuần sau" ]
-                            ]
-                        ]
-                    , div
-                        [ class "grid grid-cols-8 grid-rows-13 gap-2 w-auto h-full"
-                        ]
-                        (viewWeekdays model.currentTime
-                            ++ viewPeriods
-                            ++ List.map viewCourse (List.filter (.weeks >> List.member thisWeek) courses)
-                        )
-                    , div [ class "flex flex-col items-center bg-blue-700 text-white p-2" ]
-                     [ button [ onClick (GotRaw "") ] [ text "Nhập lại TKB tại đây" ]]
+
+                    _ ->
+                        viewCourses model.currentTime courses
+        ]
+
+
+viewCourses : ( Posix, Zone ) -> List Course -> Html Msg
+viewCourses currentTime courses =
+    let
+        thisWeek =
+            posixToWeekNumber currentTime
+    in
+    div []
+        [ div [ class "flex flex-col items-center bg-gradient-to-t from-blue-600 to-blue-700 text-white p-2" ]
+            [ p [ class "text-2xl font-bold" ]
+                [ text ("Tuần " ++ String.fromInt thisWeek)
+                ]
+            , div [ class "flex gap-5" ]
+                [ button
+                    [ class "flex items-center px-2 rounded text-sm bg-blue-500 shadow-md"
+                    , class "hover:bg-white hover:text-blue-500"
+                    , onClick PrevWeek
                     ]
+                    [ chevronLeft [ SvgAttr.class "h-4" ]
+                    , span [] [ text "Tuần trước" ]
+                    ]
+                , button
+                    [ class "flex items-center px-2 rounded text-sm bg-blue-500 shadow-md"
+                    , class "hover:bg-white hover:text-blue-500"
+                    , onClick NextWeek
+                    ]
+                    [ span [] [ text "Tuần sau" ]
+                    , chevronRight [ SvgAttr.class "h-4" ]
+                    ]
+                ]
+            ]
+        , div
+            [ class "grid grid-cols-8 grid-rows-13 gap-2 w-auto h-full"
+            ]
+            (viewWeekdays currentTime
+                ++ viewPeriods
+                ++ List.map viewCourse (List.filter (.weeks >> List.member thisWeek) courses)
+            )
+        , div [ class "flex flex-col items-center bg-blue-600 text-white p-2" ]
+            [ button [ class "underline", onClick (GotRaw "") ] [ text "Nhập lại TKB tại đây" ]
+            , p [ class "text-sm font-thin " ] [ text "Made with love by a K20 ❤" ]
+            ]
         ]
 
 
@@ -250,7 +274,10 @@ viewCourse { name, period, weekday, room } =
         , class "bg-gradient-to-r from-blue-400 to-blue-500"
         ]
         [ span [ class "font-semibold" ] [ text name ]
-        , span [ class "text-sm" ] [ text ("Tại " ++ room) ]
+        , div [ class "flex items-center gap-1 font-thin" ]
+            [ locationMarker [ SvgAttr.class "h-4"]
+            , span [] [ text room ]
+            ]
         ]
 
 
@@ -322,15 +349,15 @@ viewPeriods =
                 , div
                     [ class "col-start-1"
                     , class (periodToClass ( period, period ))
-                    , class "flex flex-col items-center"
+                    , class "flex flex-col items-end text-right"
                     ]
-                    [ span [ class "uppercase font-semibold tracking-wide" ]
+                    [ span [ class "text-blue-800 uppercase font-semibold tracking-wide" ]
                         [ text
                             ("TIẾT "
                                 ++ String.fromInt period
                             )
                         ]
-                    , span [ class "text-blue-500 text-sm" ] [ text (periodToTime period) ]
+                    , span [ class "font-thin text-blue-500" ] [ text (periodToTime period) ]
                     ]
                 ]
             )
@@ -374,7 +401,11 @@ viewWeekdays ( posix, zone ) =
                     , class (weekdayToClass weekday)
                     , class "text-center"
                     ]
-                    [ span [ class "font-semibold uppercase tracking-wide" ] [ text (weekdayToText weekday) ]
+                    [ span
+                        [ class
+                            "text-blue-800 font-semibold uppercase tracking-wide"
+                        ]
+                        [ text (weekdayToText weekday) ]
                     , viewDate
                         ( millisToPosix (posixToMillis posix + dayToMillis (weekday - 1 - dayOfWeek ( posix, zone )))
                         , zone
@@ -430,7 +461,7 @@ viewDate ( posix, zone ) =
         toString =
             String.fromInt >> String.padLeft 2 '0'
     in
-    span [ class "text-sm text-blue-500" ] [ text (toString day ++ "/" ++ toString month) ]
+    span [ class "font-thin text-blue-500" ] [ text (toString day ++ "/" ++ toString month) ]
 
 
 

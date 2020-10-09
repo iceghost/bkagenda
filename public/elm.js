@@ -5229,7 +5229,7 @@ var $author$project$Main$InputRaw = function (a) {
 };
 var $author$project$Main$Model = F2(
 	function (state, currentTime) {
-		return {h: currentTime, E: state};
+		return {i: currentTime, E: state};
 	});
 var $author$project$Main$ViewCourses = function (a) {
 	return {$: 1, a: a};
@@ -5415,7 +5415,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							h: _Utils_Tuple2(posix, model.h.b)
+							i: _Utils_Tuple2(posix, model.i.b)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 3:
@@ -5424,7 +5424,7 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							h: _Utils_Tuple2(model.h.a, zone)
+							i: _Utils_Tuple2(model.i.a, zone)
 						}),
 					$elm$core$Platform$Cmd$none);
 			case 4:
@@ -5432,13 +5432,13 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							h: A2(
+							i: A2(
 								$elm$core$Tuple$mapFirst,
 								function (posix) {
 									return $elm$time$Time$millisToPosix(
 										$elm$time$Time$posixToMillis(posix) + $author$project$Main$dayToMillis(7));
 								},
-								model.h)
+								model.i)
 						}),
 					$elm$core$Platform$Cmd$none);
 			default:
@@ -5446,13 +5446,13 @@ var $author$project$Main$update = F2(
 					_Utils_update(
 						model,
 						{
-							h: A2(
+							i: A2(
 								$elm$core$Tuple$mapFirst,
 								function (posix) {
 									return $elm$time$Time$millisToPosix(
 										$elm$time$Time$posixToMillis(posix) - $author$project$Main$dayToMillis(7));
 								},
-								model.h)
+								model.i)
 						}),
 					$elm$core$Platform$Cmd$none);
 		}
@@ -5460,8 +5460,6 @@ var $author$project$Main$update = F2(
 var $author$project$Main$GotRaw = function (a) {
 	return {$: 1, a: a};
 };
-var $author$project$Main$NextWeek = {$: 4};
-var $author$project$Main$PrevWeek = {$: 5};
 var $author$project$Main$SaveData = function (a) {
 	return {$: 0, a: a};
 };
@@ -5476,48 +5474,7 @@ var $elm$html$Html$Attributes$stringProperty = F2(
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $author$project$Main$example = 'MI1003\tGiáo dục quốc phòng\t--\t--\tL02\t--\t0-0\t0:00 - 0:00\t------\tBK-CS1\t--|--|--|--|--|--|45|46|47|48|\r\n...';
-var $elm$core$List$filter = F2(
-	function (isGood, list) {
-		return A3(
-			$elm$core$List$foldr,
-			F2(
-				function (x, xs) {
-					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
-				}),
-			_List_Nil,
-			list);
-	});
 var $elm$html$Html$label = _VirtualDom_node('label');
-var $elm$core$List$any = F2(
-	function (isOkay, list) {
-		any:
-		while (true) {
-			if (!list.b) {
-				return false;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				if (isOkay(x)) {
-					return true;
-				} else {
-					var $temp$isOkay = isOkay,
-						$temp$list = xs;
-					isOkay = $temp$isOkay;
-					list = $temp$list;
-					continue any;
-				}
-			}
-		}
-	});
-var $elm$core$List$member = F2(
-	function (x, xs) {
-		return A2(
-			$elm$core$List$any,
-			function (a) {
-				return _Utils_eq(a, x);
-			},
-			xs);
-	});
 var $elm$virtual_dom$VirtualDom$Normal = function (a) {
 	return {$: 0, a: a};
 };
@@ -5567,8 +5524,120 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
-var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$html$Html$Attributes$placeholder = $elm$html$Html$Attributes$stringProperty('placeholder');
+var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
+var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
+var $elm$html$Html$textarea = _VirtualDom_node('textarea');
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Main$NextWeek = {$: 4};
+var $author$project$Main$PrevWeek = {$: 5};
+var $elm$svg$Svg$Attributes$d = _VirtualDom_attribute('d');
+var $elm$svg$Svg$Attributes$fill = _VirtualDom_attribute('fill');
+var $elm$svg$Svg$trustedNode = _VirtualDom_nodeNS('http://www.w3.org/2000/svg');
+var $elm$svg$Svg$path = $elm$svg$Svg$trustedNode('path');
+var $elm$svg$Svg$Attributes$stroke = _VirtualDom_attribute('stroke');
+var $elm$svg$Svg$Attributes$strokeLinecap = _VirtualDom_attribute('stroke-linecap');
+var $elm$svg$Svg$Attributes$strokeLinejoin = _VirtualDom_attribute('stroke-linejoin');
+var $elm$svg$Svg$Attributes$strokeWidth = _VirtualDom_attribute('stroke-width');
+var $elm$svg$Svg$svg = $elm$svg$Svg$trustedNode('svg');
+var $elm$svg$Svg$Attributes$viewBox = _VirtualDom_attribute('viewBox');
+var $jasonliang_dev$elm_heroicons$Heroicons$Outline$chevronLeft = function (attrs) {
+	return A2(
+		$elm$svg$Svg$svg,
+		A2(
+			$elm$core$List$cons,
+			$elm$svg$Svg$Attributes$fill('none'),
+			A2(
+				$elm$core$List$cons,
+				$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+				A2(
+					$elm$core$List$cons,
+					$elm$svg$Svg$Attributes$stroke('currentColor'),
+					attrs))),
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$path,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$strokeLinecap('round'),
+						$elm$svg$Svg$Attributes$strokeLinejoin('round'),
+						$elm$svg$Svg$Attributes$strokeWidth('2'),
+						$elm$svg$Svg$Attributes$d('M15 19l-7-7 7-7')
+					]),
+				_List_Nil)
+			]));
+};
+var $jasonliang_dev$elm_heroicons$Heroicons$Outline$chevronRight = function (attrs) {
+	return A2(
+		$elm$svg$Svg$svg,
+		A2(
+			$elm$core$List$cons,
+			$elm$svg$Svg$Attributes$fill('none'),
+			A2(
+				$elm$core$List$cons,
+				$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+				A2(
+					$elm$core$List$cons,
+					$elm$svg$Svg$Attributes$stroke('currentColor'),
+					attrs))),
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$path,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$strokeLinecap('round'),
+						$elm$svg$Svg$Attributes$strokeLinejoin('round'),
+						$elm$svg$Svg$Attributes$strokeWidth('2'),
+						$elm$svg$Svg$Attributes$d('M9 5l7 7-7 7')
+					]),
+				_List_Nil)
+			]));
+};
+var $elm$svg$Svg$Attributes$class = _VirtualDom_attribute('class');
+var $elm$core$List$filter = F2(
+	function (isGood, list) {
+		return A3(
+			$elm$core$List$foldr,
+			F2(
+				function (x, xs) {
+					return isGood(x) ? A2($elm$core$List$cons, x, xs) : xs;
+				}),
+			_List_Nil,
+			list);
+	});
+var $elm$core$List$any = F2(
+	function (isOkay, list) {
+		any:
+		while (true) {
+			if (!list.b) {
+				return false;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				if (isOkay(x)) {
+					return true;
+				} else {
+					var $temp$isOkay = isOkay,
+						$temp$list = xs;
+					isOkay = $temp$isOkay;
+					list = $temp$list;
+					continue any;
+				}
+			}
+		}
+	});
+var $elm$core$List$member = F2(
+	function (x, xs) {
+		return A2(
+			$elm$core$List$any,
+			function (a) {
+				return _Utils_eq(a, x);
+			},
+			xs);
+	});
+var $elm$html$Html$p = _VirtualDom_node('p');
 var $elm$time$Time$Fri = 4;
 var $elm$time$Time$Mon = 0;
 var $elm$time$Time$Sat = 5;
@@ -5789,10 +5858,7 @@ var $author$project$Main$posixToWeekNumber = function (_v0) {
 		w,
 		weeks(year)) > 0) ? 1 : w);
 };
-var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
-var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $elm$html$Html$textarea = _VirtualDom_node('textarea');
-var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $elm$html$Html$span = _VirtualDom_node('span');
 var $author$project$Main$periodToClass = function (_v0) {
 	var begin = _v0.a;
 	var end = _v0.b;
@@ -5881,7 +5947,43 @@ var $author$project$Main$infoToClass = F2(
 		return ((begin <= 0) || ((end <= 0) || (weekday < 2))) ? 'hidden' : ($author$project$Main$weekdayToClass(weekday) + (' col-span-1 ' + $author$project$Main$periodToClass(
 			_Utils_Tuple2(begin, end))));
 	});
-var $elm$html$Html$span = _VirtualDom_node('span');
+var $jasonliang_dev$elm_heroicons$Heroicons$Outline$locationMarker = function (attrs) {
+	return A2(
+		$elm$svg$Svg$svg,
+		A2(
+			$elm$core$List$cons,
+			$elm$svg$Svg$Attributes$fill('none'),
+			A2(
+				$elm$core$List$cons,
+				$elm$svg$Svg$Attributes$viewBox('0 0 24 24'),
+				A2(
+					$elm$core$List$cons,
+					$elm$svg$Svg$Attributes$stroke('currentColor'),
+					attrs))),
+		_List_fromArray(
+			[
+				A2(
+				$elm$svg$Svg$path,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$strokeLinecap('round'),
+						$elm$svg$Svg$Attributes$strokeLinejoin('round'),
+						$elm$svg$Svg$Attributes$strokeWidth('2'),
+						$elm$svg$Svg$Attributes$d('M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z')
+					]),
+				_List_Nil),
+				A2(
+				$elm$svg$Svg$path,
+				_List_fromArray(
+					[
+						$elm$svg$Svg$Attributes$strokeLinecap('round'),
+						$elm$svg$Svg$Attributes$strokeLinejoin('round'),
+						$elm$svg$Svg$Attributes$strokeWidth('2'),
+						$elm$svg$Svg$Attributes$d('M15 11a3 3 0 11-6 0 3 3 0 016 0z')
+					]),
+				_List_Nil)
+			]));
+};
 var $author$project$Main$viewCourse = function (_v0) {
 	var name = _v0.V;
 	var period = _v0.Y;
@@ -5909,14 +6011,25 @@ var $author$project$Main$viewCourse = function (_v0) {
 						$elm$html$Html$text(name)
 					])),
 				A2(
-				$elm$html$Html$span,
+				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('text-sm')
+						$elm$html$Html$Attributes$class('flex items-center gap-1 font-thin')
 					]),
 				_List_fromArray(
 					[
-						$elm$html$Html$text('Tại ' + room)
+						$jasonliang_dev$elm_heroicons$Heroicons$Outline$locationMarker(
+						_List_fromArray(
+							[
+								$elm$svg$Svg$Attributes$class('h-4')
+							])),
+						A2(
+						$elm$html$Html$span,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text(room)
+							]))
 					]))
 			]));
 };
@@ -5985,7 +6098,7 @@ var $author$project$Main$viewPeriods = function () {
 								$elm$html$Html$Attributes$class(
 								$author$project$Main$periodToClass(
 									_Utils_Tuple2(period, period))),
-								$elm$html$Html$Attributes$class('flex flex-col items-center')
+								$elm$html$Html$Attributes$class('flex flex-col items-end text-right')
 							]),
 						_List_fromArray(
 							[
@@ -5993,7 +6106,7 @@ var $author$project$Main$viewPeriods = function () {
 								$elm$html$Html$span,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('uppercase font-semibold tracking-wide')
+										$elm$html$Html$Attributes$class('text-blue-800 uppercase font-semibold tracking-wide')
 									]),
 								_List_fromArray(
 									[
@@ -6004,7 +6117,7 @@ var $author$project$Main$viewPeriods = function () {
 								$elm$html$Html$span,
 								_List_fromArray(
 									[
-										$elm$html$Html$Attributes$class('text-blue-500 text-sm')
+										$elm$html$Html$Attributes$class('font-thin text-blue-500')
 									]),
 								_List_fromArray(
 									[
@@ -6084,7 +6197,7 @@ var $author$project$Main$viewDate = function (_v0) {
 		$elm$html$Html$span,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('text-sm text-blue-500')
+				$elm$html$Html$Attributes$class('font-thin text-blue-500')
 			]),
 		_List_fromArray(
 			[
@@ -6133,7 +6246,7 @@ var $author$project$Main$viewWeekdays = function (_v0) {
 						$elm$html$Html$span,
 						_List_fromArray(
 							[
-								$elm$html$Html$Attributes$class('font-semibold uppercase tracking-wide')
+								$elm$html$Html$Attributes$class('text-blue-800 font-semibold uppercase tracking-wide')
 							]),
 						_List_fromArray(
 							[
@@ -6151,12 +6264,150 @@ var $author$project$Main$viewWeekdays = function (_v0) {
 		},
 		A2($elm$core$List$range, 2, 8));
 };
+var $author$project$Main$viewCourses = F2(
+	function (currentTime, courses) {
+		var thisWeek = $author$project$Main$posixToWeekNumber(currentTime);
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('flex flex-col items-center bg-gradient-to-t from-blue-600 to-blue-700 text-white p-2')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$p,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('text-2xl font-bold')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text(
+									'Tuần ' + $elm$core$String$fromInt(thisWeek))
+								])),
+							A2(
+							$elm$html$Html$div,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('flex gap-5')
+								]),
+							_List_fromArray(
+								[
+									A2(
+									$elm$html$Html$button,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('flex items-center px-2 rounded text-sm bg-blue-500 shadow-md'),
+											$elm$html$Html$Attributes$class('hover:bg-white hover:text-blue-500'),
+											$elm$html$Html$Events$onClick($author$project$Main$PrevWeek)
+										]),
+									_List_fromArray(
+										[
+											$jasonliang_dev$elm_heroicons$Heroicons$Outline$chevronLeft(
+											_List_fromArray(
+												[
+													$elm$svg$Svg$Attributes$class('h-4')
+												])),
+											A2(
+											$elm$html$Html$span,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Tuần trước')
+												]))
+										])),
+									A2(
+									$elm$html$Html$button,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('flex items-center px-2 rounded text-sm bg-blue-500 shadow-md'),
+											$elm$html$Html$Attributes$class('hover:bg-white hover:text-blue-500'),
+											$elm$html$Html$Events$onClick($author$project$Main$NextWeek)
+										]),
+									_List_fromArray(
+										[
+											A2(
+											$elm$html$Html$span,
+											_List_Nil,
+											_List_fromArray(
+												[
+													$elm$html$Html$text('Tuần sau')
+												])),
+											$jasonliang_dev$elm_heroicons$Heroicons$Outline$chevronRight(
+											_List_fromArray(
+												[
+													$elm$svg$Svg$Attributes$class('h-4')
+												]))
+										]))
+								]))
+						])),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('grid grid-cols-8 grid-rows-13 gap-2 w-auto h-full')
+						]),
+					_Utils_ap(
+						$author$project$Main$viewWeekdays(currentTime),
+						_Utils_ap(
+							$author$project$Main$viewPeriods,
+							A2(
+								$elm$core$List$map,
+								$author$project$Main$viewCourse,
+								A2(
+									$elm$core$List$filter,
+									A2(
+										$elm$core$Basics$composeR,
+										function ($) {
+											return $.am;
+										},
+										$elm$core$List$member(thisWeek)),
+									courses))))),
+					A2(
+					$elm$html$Html$div,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$class('flex flex-col items-center bg-blue-600 text-white p-2')
+						]),
+					_List_fromArray(
+						[
+							A2(
+							$elm$html$Html$button,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('underline'),
+									$elm$html$Html$Events$onClick(
+									$author$project$Main$GotRaw(''))
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Nhập lại TKB tại đây')
+								])),
+							A2(
+							$elm$html$Html$p,
+							_List_fromArray(
+								[
+									$elm$html$Html$Attributes$class('text-sm font-thin ')
+								]),
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Made with love by a K20 ❤')
+								]))
+						]))
+				]));
+	});
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('min-h-screen min-w-screen')
+				$elm$html$Html$Attributes$class('container mx-auto min-h-screen w-screen')
 			]),
 		_List_fromArray(
 			[
@@ -6166,10 +6417,7 @@ var $author$project$Main$view = function (model) {
 					var raw = _v0.a;
 					return A2(
 						$elm$html$Html$div,
-						_List_fromArray(
-							[
-								$elm$html$Html$Attributes$class('mx-16')
-							]),
+						_List_Nil,
 						_List_fromArray(
 							[
 								A2(
@@ -6204,106 +6452,30 @@ var $author$project$Main$view = function (model) {
 							]));
 				} else {
 					var courses = _v0.a;
-					var thisWeek = $author$project$Main$posixToWeekNumber(model.h);
-					return A2(
-						$elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('flex flex-col items-center bg-blue-700 text-white p-2')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$p,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('text-2xl font-bold')
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text(
-												'Tuần ' + $elm$core$String$fromInt(thisWeek))
-											])),
-										A2(
-										$elm$html$Html$div,
-										_List_fromArray(
-											[
-												$elm$html$Html$Attributes$class('flex gap-3')
-											]),
-										_List_fromArray(
-											[
-												A2(
-												$elm$html$Html$button,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('p-1 rounded text-sm bg-white bg-blue-500 border-r-2 border-b-2 border-white'),
-														$elm$html$Html$Events$onClick($author$project$Main$PrevWeek)
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Tuần trước')
-													])),
-												A2(
-												$elm$html$Html$button,
-												_List_fromArray(
-													[
-														$elm$html$Html$Attributes$class('p-1 rounded text-sm bg-white bg-blue-500 border-r-2 border-b-2 border-white'),
-														$elm$html$Html$Events$onClick($author$project$Main$NextWeek)
-													]),
-												_List_fromArray(
-													[
-														$elm$html$Html$text('Tuần sau')
-													]))
-											]))
-									])),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('grid grid-cols-8 grid-rows-13 gap-2 w-auto h-full')
-									]),
-								_Utils_ap(
-									$author$project$Main$viewWeekdays(model.h),
-									_Utils_ap(
-										$author$project$Main$viewPeriods,
-										A2(
-											$elm$core$List$map,
-											$author$project$Main$viewCourse,
-											A2(
-												$elm$core$List$filter,
-												A2(
-													$elm$core$Basics$composeR,
-													function ($) {
-														return $.am;
-													},
-													$elm$core$List$member(thisWeek)),
-												courses))))),
-								A2(
-								$elm$html$Html$div,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$class('flex flex-col items-center bg-blue-700 text-white p-2')
-									]),
-								_List_fromArray(
-									[
-										A2(
-										$elm$html$Html$button,
-										_List_fromArray(
-											[
-												$elm$html$Html$Events$onClick(
-												$author$project$Main$GotRaw(''))
-											]),
-										_List_fromArray(
-											[
-												$elm$html$Html$text('Nhập lại TKB tại đây')
-											]))
-									]))
-							]));
+					if (!courses.b) {
+						return A2(
+							$elm$html$Html$div,
+							_List_Nil,
+							_List_fromArray(
+								[
+									$elm$html$Html$text('Không đọc được môn nào cả. Vui lòng '),
+									A2(
+									$elm$html$Html$button,
+									_List_fromArray(
+										[
+											$elm$html$Html$Attributes$class('bg-blue-500 px-1 text-white rounded shadow-md'),
+											$elm$html$Html$Events$onClick(
+											$author$project$Main$GotRaw(''))
+										]),
+									_List_fromArray(
+										[
+											$elm$html$Html$text('nhập lại')
+										])),
+									$elm$html$Html$text(' bạn nhé')
+								]));
+					} else {
+						return A2($author$project$Main$viewCourses, model.i, courses);
+					}
 				}
 			}()
 			]));
