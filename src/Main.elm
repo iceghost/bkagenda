@@ -187,23 +187,23 @@ example =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container mx-auto min-h-screen w-screen" ]
+    div [ class "container mx-auto min-h-screen w-screen text-blue-900" ]
         [ case model.state of
             InputRaw raw ->
-                div []
-                    [ label []
-                        [ text "Copy nguyên cái bảng vào đây"
+                div [ class "flex flex-col items-center"]
+                    [ label [ class "w-full text-center"]
+                        [ div [ class "bg-gradient-to-b from-blue-800 to-blue-700 p-2 text-white text-xl font-thin"] [ text "Copy nguyên cái bảng TKB vào đây" ]
                         , textarea
                             [ value raw
                             , placeholder example
                             , onInput GotRaw
-                            , class "block w-full p-1 h-56 border"
+                            , class "block w-full p-1 h-56 bg-blue-100 shadow-inset placeholder-blue-400"
                             ]
                             []
                         ]
                     , button
                         [ onClick (SaveData raw)
-                        , class "bg-red-500 mt-2 p-1 text-white"
+                        , class "bg-blue-500 mt-2 px-2 text-white rounded shadow-md"
                         ]
                         [ text "Lưu" ]
                     ]
@@ -253,7 +253,7 @@ viewCourses currentTime courses =
                 ]
             ]
         , div
-            [ class "grid grid-cols-8 grid-rows-13 gap-2 w-auto h-full"
+            [ class "grid grid-cols-8 grid-rows-19 gap-2 w-auto h-full"
             ]
             (viewWeekdays currentTime
                 ++ viewPeriods
@@ -270,12 +270,12 @@ viewCourse : Course -> Html Msg
 viewCourse { name, period, weekday, room } =
     div
         [ class (infoToClass weekday period)
-        , class "flex flex-col p-2 rounded text-white"
-        , class "bg-gradient-to-r from-blue-400 to-blue-500"
+        , class "flex flex-col gap-1 p-2 rounded text-blue-900"
+        , class "bg-gradient-to-r from-blue-300 to-blue-400"
         ]
         [ span [ class "font-semibold" ] [ text name ]
-        , div [ class "flex items-center gap-1 font-thin" ]
-            [ locationMarker [ SvgAttr.class "h-4"]
+        , div [ class "flex flex-col sm:flex-row items-center gap-1 font-thin" ]
+            [ locationMarker [ SvgAttr.class "h-4" ]
             , span [] [ text room ]
             ]
         ]
@@ -330,10 +330,28 @@ viewPeriods =
                 11 ->
                     "16:00 - 16:50"
 
+                12 ->
+                    "17:00 - 16:50"
+
+                13 ->
+                    "18:00 - 16:50"
+
+                14 ->
+                    "18:50 - 19:40"
+
+                15 ->
+                    "19:40 - 20:30"
+
+                16 ->
+                    "20:30 - 21:20"
+
+                17 ->
+                    "21:20 - 22:10"
+
                 _ ->
                     "Tiết này ngộ à nha..."
     in
-    List.range 1 11
+    List.range 1 17
         |> List.map
             (\period ->
                 [ div
@@ -534,6 +552,24 @@ periodToClass ( begin, end ) =
                 11 ->
                     "row-start-12"
 
+                12 ->
+                    "row-start-13"
+
+                13 ->
+                    "row-start-14"
+
+                14 ->
+                    "row-start-15"
+
+                15 ->
+                    "row-start-16"
+
+                16 ->
+                    "row-start-17"
+
+                17 ->
+                    "row-start-18"
+
                 _ ->
                     "hidden"
 
@@ -571,6 +607,24 @@ periodToClass ( begin, end ) =
 
                 11 ->
                     "row-end-13"
+
+                12 ->
+                    "row-end-14"
+
+                13 ->
+                    "row-end-15"
+
+                14 ->
+                    "row-end-16"
+
+                15 ->
+                    "row-end-17"
+
+                16 ->
+                    "row-end-18"
+
+                17 ->
+                    "row-end-19"
 
                 _ ->
                     "hidden"

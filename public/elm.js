@@ -5886,6 +5886,18 @@ var $author$project$Main$periodToClass = function (_v0) {
 				return 'row-end-12';
 			case 11:
 				return 'row-end-13';
+			case 12:
+				return 'row-end-14';
+			case 13:
+				return 'row-end-15';
+			case 14:
+				return 'row-end-16';
+			case 15:
+				return 'row-end-17';
+			case 16:
+				return 'row-end-18';
+			case 17:
+				return 'row-end-19';
 			default:
 				return 'hidden';
 		}
@@ -5914,6 +5926,18 @@ var $author$project$Main$periodToClass = function (_v0) {
 				return 'row-start-11';
 			case 11:
 				return 'row-start-12';
+			case 12:
+				return 'row-start-13';
+			case 13:
+				return 'row-start-14';
+			case 14:
+				return 'row-start-15';
+			case 15:
+				return 'row-start-16';
+			case 16:
+				return 'row-start-17';
+			case 17:
+				return 'row-start-18';
 			default:
 				return 'hidden';
 		}
@@ -5995,8 +6019,8 @@ var $author$project$Main$viewCourse = function (_v0) {
 			[
 				$elm$html$Html$Attributes$class(
 				A2($author$project$Main$infoToClass, weekday, period)),
-				$elm$html$Html$Attributes$class('flex flex-col p-2 rounded text-white'),
-				$elm$html$Html$Attributes$class('bg-gradient-to-r from-blue-400 to-blue-500')
+				$elm$html$Html$Attributes$class('flex flex-col gap-1 p-2 rounded text-blue-900'),
+				$elm$html$Html$Attributes$class('bg-gradient-to-r from-blue-300 to-blue-400')
 			]),
 		_List_fromArray(
 			[
@@ -6014,7 +6038,7 @@ var $author$project$Main$viewCourse = function (_v0) {
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('flex items-center gap-1 font-thin')
+						$elm$html$Html$Attributes$class('flex flex-col sm:flex-row items-center gap-1 font-thin')
 					]),
 				_List_fromArray(
 					[
@@ -6069,6 +6093,18 @@ var $author$project$Main$viewPeriods = function () {
 				return '15:00 - 15:50';
 			case 11:
 				return '16:00 - 16:50';
+			case 12:
+				return '17:00 - 16:50';
+			case 13:
+				return '18:00 - 16:50';
+			case 14:
+				return '18:50 - 19:40';
+			case 15:
+				return '19:40 - 20:30';
+			case 16:
+				return '20:30 - 21:20';
+			case 17:
+				return '21:20 - 22:10';
 			default:
 				return 'Tiết này ngộ à nha...';
 		}
@@ -6127,7 +6163,7 @@ var $author$project$Main$viewPeriods = function () {
 							]))
 					]);
 			},
-			A2($elm$core$List$range, 1, 11)));
+			A2($elm$core$List$range, 1, 17)));
 }();
 var $elm$core$String$cons = _String_cons;
 var $elm$core$String$fromChar = function (_char) {
@@ -6351,7 +6387,7 @@ var $author$project$Main$viewCourses = F2(
 					$elm$html$Html$div,
 					_List_fromArray(
 						[
-							$elm$html$Html$Attributes$class('grid grid-cols-8 grid-rows-13 gap-2 w-auto h-full')
+							$elm$html$Html$Attributes$class('grid grid-cols-8 grid-rows-19 gap-2 w-auto h-full')
 						]),
 					_Utils_ap(
 						$author$project$Main$viewWeekdays(currentTime),
@@ -6407,7 +6443,7 @@ var $author$project$Main$view = function (model) {
 		$elm$html$Html$div,
 		_List_fromArray(
 			[
-				$elm$html$Html$Attributes$class('container mx-auto min-h-screen w-screen')
+				$elm$html$Html$Attributes$class('container mx-auto min-h-screen w-screen text-blue-900')
 			]),
 		_List_fromArray(
 			[
@@ -6417,15 +6453,30 @@ var $author$project$Main$view = function (model) {
 					var raw = _v0.a;
 					return A2(
 						$elm$html$Html$div,
-						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('flex flex-col items-center')
+							]),
 						_List_fromArray(
 							[
 								A2(
 								$elm$html$Html$label,
-								_List_Nil,
 								_List_fromArray(
 									[
-										$elm$html$Html$text('Copy nguyên cái bảng vào đây'),
+										$elm$html$Html$Attributes$class('w-full text-center')
+									]),
+								_List_fromArray(
+									[
+										A2(
+										$elm$html$Html$div,
+										_List_fromArray(
+											[
+												$elm$html$Html$Attributes$class('bg-gradient-to-b from-blue-800 to-blue-700 p-2 text-white text-xl font-thin')
+											]),
+										_List_fromArray(
+											[
+												$elm$html$Html$text('Copy nguyên cái bảng TKB vào đây')
+											])),
 										A2(
 										$elm$html$Html$textarea,
 										_List_fromArray(
@@ -6433,7 +6484,7 @@ var $author$project$Main$view = function (model) {
 												$elm$html$Html$Attributes$value(raw),
 												$elm$html$Html$Attributes$placeholder($author$project$Main$example),
 												$elm$html$Html$Events$onInput($author$project$Main$GotRaw),
-												$elm$html$Html$Attributes$class('block w-full p-1 h-56 border')
+												$elm$html$Html$Attributes$class('block w-full p-1 h-56 bg-blue-100 shadow-inset placeholder-blue-400')
 											]),
 										_List_Nil)
 									])),
@@ -6443,7 +6494,7 @@ var $author$project$Main$view = function (model) {
 									[
 										$elm$html$Html$Events$onClick(
 										$author$project$Main$SaveData(raw)),
-										$elm$html$Html$Attributes$class('bg-red-500 mt-2 p-1 text-white')
+										$elm$html$Html$Attributes$class('bg-blue-500 mt-2 px-2 text-white rounded shadow-md')
 									]),
 								_List_fromArray(
 									[
