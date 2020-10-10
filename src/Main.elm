@@ -1,7 +1,7 @@
 port module Main exposing (Model, Msg, init, subscriptions, update, view)
 
 import Browser
-import Heroicons.Outline exposing (chevronLeft, chevronRight, locationMarker)
+import Heroicons.Outline exposing (chevronLeft, chevronRight, clock, locationMarker)
 import Html exposing (..)
 import Html.Attributes exposing (class, placeholder, preload, value)
 import Html.Events exposing (onClick, onInput)
@@ -32,6 +32,7 @@ type alias Course =
     , name : String
     , weekday : Int
     , period : ( Int, Int )
+    , time : String
     , room : String
     , weeks : List Int
     }
@@ -69,7 +70,7 @@ init raw =
 
 
 
--- UPDATE
+---- UPDATE ----
 
 
 type Msg
@@ -79,11 +80,7 @@ type Msg
     | GotZone Zone
     | NextWeek
     | PrevWeek
-
-
-dayToMillis : Int -> Int
-dayToMillis day =
-    day * 86400000
+    | SetDay Posix
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -133,6 +130,11 @@ update msg model =
             , Cmd.none
             )
 
+        SetDay posix ->
+            ( { model | currentTime = model.currentTime |> Tuple.mapFirst (\_ -> posix) }
+            , Cmd.none
+            )
+
 
 rawToCourses : String -> List Course
 rawToCourses raw =
@@ -140,7 +142,7 @@ rawToCourses raw =
         |> List.filterMap
             (\line ->
                 case String.split "\t" line of
-                    [ id, name, _, _, _, rawWeekday, rawPeriod, _, room, _, rawWeeks ] ->
+                    [ id, name, _, _, _, rawWeekday, rawPeriod, rawTime, room, _, rawWeeks ] ->
                         let
                             defaultZero =
                                 String.toInt >> Maybe.withDefault 0
@@ -159,7 +161,7 @@ rawToCourses raw =
                                     _ ->
                                         ( 0, 0 )
                         in
-                        Just (Course id name weekday period room weeks)
+                        Just (Course id name weekday period rawTime room weeks)
 
                     _ ->
                         Nothing
@@ -167,7 +169,7 @@ rawToCourses raw =
 
 
 
--- SUBSCRIPTION
+---- SUBSCRIPTION ----
 
 
 subscriptions : Model -> Sub Msg
@@ -176,7 +178,7 @@ subscriptions model =
 
 
 
--- VIEW
+---- VIEW ----
 
 
 example : String
@@ -187,253 +189,157 @@ example =
 
 view : Model -> Html Msg
 view model =
-    div [ class "container mx-auto min-h-screen w-screen text-blue-900" ]
-        [ case model.state of
+    div [ class "container flex flex-col justify-between mx-auto min-h-screen w-screen text-blue-900" ]
+        (case model.state of
             InputRaw raw ->
-                div [ class "flex flex-col items-center"]
-                    [ label [ class "w-full text-center"]
-                        [ div [ class "bg-gradient-to-b from-blue-800 to-blue-700 p-2 text-white text-xl font-thin"] [ text "Copy nguyên cái bảng TKB vào đây" ]
-                        , textarea
-                            [ value raw
-                            , placeholder example
-                            , onInput GotRaw
-                            , class "block w-full p-1 h-56 bg-blue-100 shadow-inset placeholder-blue-400"
-                            ]
-                            []
-                        ]
-                    , button
-                        [ onClick (SaveData raw)
-                        , class "bg-blue-500 mt-2 px-2 text-white rounded shadow-md"
-                        ]
-                        [ text "Lưu" ]
-                    ]
+                viewInput raw
 
             ViewCourses courses ->
                 case courses of
                     [] ->
-                        div []
-                            [ text "Không đọc được môn nào cả. Vui lòng "
-                            , button [ class "bg-blue-500 px-1 text-white rounded shadow-md", onClick (GotRaw "") ] [ text "nhập lại" ]
-                            , text " bạn nhé"
-                            ]
+                        [ text "Không đọc được môn nào cả. Vui lòng "
+                        , button [ class "bg-blue-500 px-1 text-white rounded shadow-md", onClick (GotRaw "") ] [ text "nhập lại" ]
+                        , text " bạn nhé"
+                        ]
 
                     _ ->
                         viewCourses model.currentTime courses
+        )
+
+
+viewInput : String -> List (Html Msg)
+viewInput raw =
+    div [ class "flex flex-col" ]
+        [ label [ class "w-full text-center" ]
+            [ div [ class "bg-gradient-to-b from-blue-800 to-blue-700 p-2 text-white text-xl font-thin" ] [ text "Copy nguyên cái bảng TKB vào đây" ]
+            , textarea
+                [ value raw
+                , placeholder example
+                , onInput GotRaw
+                , class "block w-full p-1 h-56 bg-blue-100 shadow-inset placeholder-blue-400"
+                ]
+                []
+            ]
+        , button
+            [ onClick (SaveData raw)
+            , class "bg-blue-500 mt-2 py-2 text-white rounded shadow-md"
+            ]
+            [ text "Lưu" ]
         ]
+        |> List.singleton
 
 
-viewCourses : ( Posix, Zone ) -> List Course -> Html Msg
+viewCourses : ( Posix, Zone ) -> List Course -> List (Html Msg)
 viewCourses currentTime courses =
     let
         thisWeek =
             posixToWeekNumber currentTime
+
+        thisWeekday =
+            dayOfWeek currentTime
+
+        header =
+            div [ class "flex flex-col bg-gradient-to-t from-blue-600 to-blue-700 text-white" ]
+                [ div [ class "flex items-center justify-center gap-2 py-2" ]
+                    [ button
+                        [ class "rounded bg-blue-500 shadow-md"
+                        , class "hover:bg-white hover:text-blue-500"
+                        , onClick PrevWeek
+                        ]
+                        [ chevronLeft [ SvgAttr.class "h-6" ] ]
+                    , span [ class "text-2xl font-bold" ]
+                        [ text ("Tuần " ++ String.fromInt thisWeek) ]
+                    , button
+                        [ class "rounded bg-blue-500 shadow-md"
+                        , class "hover:bg-white hover:text-blue-500"
+                        , onClick NextWeek
+                        ]
+                        [ chevronRight [ SvgAttr.class "h-6" ] ]
+                    ]
+                , viewWeekdays currentTime
+                ]
+
+        footer =
+            div [ class "flex flex-col items-center bg-blue-600 text-white p-2" ]
+                [ button [ class "underline", onClick (GotRaw "") ] [ text "Nhập lại TKB tại đây" ]
+                , p [ class "text-sm font-thin " ] [ text "Made with love by a K20 ❤" ]
+                ]
+
+        todayCourses =
+            courses |> List.filter (\{ weekday, weeks } -> List.member thisWeek weeks && weekday == thisWeekday)
     in
-    div []
-        [ div [ class "flex flex-col items-center bg-gradient-to-t from-blue-600 to-blue-700 text-white p-2" ]
-            [ p [ class "text-2xl font-bold" ]
-                [ text ("Tuần " ++ String.fromInt thisWeek)
-                ]
-            , div [ class "flex gap-5" ]
-                [ button
-                    [ class "flex items-center px-2 rounded text-sm bg-blue-500 shadow-md"
-                    , class "hover:bg-white hover:text-blue-500"
-                    , onClick PrevWeek
-                    ]
-                    [ chevronLeft [ SvgAttr.class "h-4" ]
-                    , span [] [ text "Tuần trước" ]
-                    ]
-                , button
-                    [ class "flex items-center px-2 rounded text-sm bg-blue-500 shadow-md"
-                    , class "hover:bg-white hover:text-blue-500"
-                    , onClick NextWeek
-                    ]
-                    [ span [] [ text "Tuần sau" ]
-                    , chevronRight [ SvgAttr.class "h-4" ]
-                    ]
-                ]
-            ]
-        , div
-            [ class "grid grid-cols-8 grid-rows-19 gap-2 w-auto h-full"
-            ]
-            (viewWeekdays currentTime
-                ++ viewPeriods
-                ++ List.map viewCourse (List.filter (.weeks >> List.member thisWeek) courses)
-            )
-        , div [ class "flex flex-col items-center bg-blue-600 text-white p-2" ]
-            [ button [ class "underline", onClick (GotRaw "") ] [ text "Nhập lại TKB tại đây" ]
-            , p [ class "text-sm font-thin " ] [ text "Made with love by a K20 ❤" ]
-            ]
-        ]
+    [ header
+    , div [ class "flex flex-col gap-1" ] (List.map viewCourse todayCourses)
+    , footer
+    ]
 
 
 viewCourse : Course -> Html Msg
-viewCourse { name, period, weekday, room } =
+viewCourse { name, period, weekday, room, time } =
     div
-        [ class (infoToClass weekday period)
-        , class "flex flex-col gap-1 p-2 rounded text-blue-900"
-        , class "bg-gradient-to-r from-blue-300 to-blue-400"
+        [ class "flex flex-col gap-1 p-2 text-blue-900"
+        , class "bg-gradient-to-r from-blue-400 to-blue-300"
         ]
         [ span [ class "font-semibold" ] [ text name ]
-        , div [ class "flex flex-col sm:flex-row items-center gap-1 font-thin" ]
+        , div [ class "flex flex-row items-center gap-1" ]
             [ locationMarker [ SvgAttr.class "h-4" ]
             , span [] [ text room ]
+            ]
+        , div [ class "flex flex-row items-center gap-1" ]
+            [ clock [ SvgAttr.class "h-4" ]
+            , span [] [ text time ]
             ]
         ]
 
 
-infoToClass : Int -> ( Int, Int ) -> String
-infoToClass weekday ( begin, end ) =
-    if begin <= 0 || end <= 0 || weekday < 2 then
-        "hidden"
-
-    else
-        weekdayToClass weekday
-            ++ " col-span-1 "
-            ++ periodToClass ( begin, end )
-
-
-viewPeriods : List (Html Msg)
-viewPeriods =
-    let
-        periodToTime period =
-            case period of
-                1 ->
-                    "06:00 - 06:50"
-
-                2 ->
-                    "07:00 - 07:50"
-
-                3 ->
-                    "08:00 - 08:50"
-
-                4 ->
-                    "09:00 - 09:50"
-
-                5 ->
-                    "10:00 - 10:50"
-
-                6 ->
-                    "11:00 - 11:50"
-
-                7 ->
-                    "12:00 - 12:50"
-
-                8 ->
-                    "13:00 - 13:50"
-
-                9 ->
-                    "14:00 - 14:50"
-
-                10 ->
-                    "15:00 - 15:50"
-
-                11 ->
-                    "16:00 - 16:50"
-
-                12 ->
-                    "17:00 - 16:50"
-
-                13 ->
-                    "18:00 - 16:50"
-
-                14 ->
-                    "18:50 - 19:40"
-
-                15 ->
-                    "19:40 - 20:30"
-
-                16 ->
-                    "20:30 - 21:20"
-
-                17 ->
-                    "21:20 - 22:10"
-
-                _ ->
-                    "Tiết này ngộ à nha..."
-    in
-    List.range 1 17
-        |> List.map
-            (\period ->
-                [ div
-                    [ class "col-start-1 col-span-8"
-                    , if remainderBy 2 period == 1 then
-                        class "bg-blue-100"
-
-                      else
-                        class ""
-                    , class (periodToClass ( period, period ))
-                    ]
-                    []
-                , div
-                    [ class "col-start-1"
-                    , class (periodToClass ( period, period ))
-                    , class "flex flex-col items-end text-right"
-                    ]
-                    [ span [ class "text-blue-800 uppercase font-semibold tracking-wide" ]
-                        [ text
-                            ("TIẾT "
-                                ++ String.fromInt period
-                            )
-                        ]
-                    , span [ class "font-thin text-blue-500" ] [ text (periodToTime period) ]
-                    ]
-                ]
-            )
-        |> List.concat
-
-
-viewWeekdays : ( Posix, Zone ) -> List (Html Msg)
+viewWeekdays : ( Posix, Zone ) -> Html Msg
 viewWeekdays ( posix, zone ) =
     let
-        weekdayToText weekday =
-            case weekday of
-                2 ->
-                    "Thứ 2"
-
-                3 ->
-                    "Thứ 3"
-
-                4 ->
-                    "Thứ 4"
-
-                5 ->
-                    "Thứ 5"
-
-                6 ->
-                    "Thứ 6"
-
-                7 ->
-                    "Thứ 7"
-
-                8 ->
-                    "Chủ nhật"
-
-                _ ->
-                    "Thứ gì ngộ dị"
+        thisWeekday =
+            dayOfWeek ( posix, zone )
     in
-    List.range 2 8
-        |> List.map
+    div [ class "flex justify-around" ]
+        (List.map
             (\weekday ->
+                let
+                    thisPosix =
+                        Time.millisToPosix (posixToMillis posix + dayToMillis (weekday - thisWeekday))
+                in
                 div
-                    [ class "flex flex-col justify-end row-start-1"
-                    , class (weekdayToClass weekday)
-                    , class "text-center"
+                    [ class "flex flex-col items-center"
+                    , onClick (SetDay thisPosix)
                     ]
-                    [ span
-                        [ class
-                            "text-blue-800 font-semibold uppercase tracking-wide"
+                    [ button
+                        [ class "flex items-center justify-center h-8 w-8 shadow-md rounded-full"
+                        , if thisWeekday == weekday then
+                            class "bg-blue-500 text-white"
+
+                          else
+                            class "bg-white text-blue-900"
                         ]
-                        [ text (weekdayToText weekday) ]
-                    , viewDate
-                        ( millisToPosix (posixToMillis posix + dayToMillis (weekday - 1 - dayOfWeek ( posix, zone )))
-                        , zone
-                        )
+                        [ span []
+                            [ text
+                                (if weekday == 7 then
+                                    "CN"
+
+                                 else
+                                    "T" ++ String.fromInt (weekday + 1)
+                                )
+                            ]
+                        ]
+                    , span [ class "font-thin text-white"] [ text (timeToString ( thisPosix, zone )) ]
                     ]
             )
+            (List.range 1 7)
+        )
 
 
-viewDate : ( Posix, Zone ) -> Html Msg
-viewDate ( posix, zone ) =
+
+---- HELPERS ----
+
+
+timeToString : ( Posix, Zone ) -> String
+timeToString ( posix, zone ) =
     let
         day =
             Time.toDay zone posix
@@ -479,157 +385,7 @@ viewDate ( posix, zone ) =
         toString =
             String.fromInt >> String.padLeft 2 '0'
     in
-    span [ class "font-thin text-blue-500" ] [ text (toString day ++ "/" ++ toString month) ]
-
-
-
--- HELPERS
-
-
-weekdayToClass : Int -> String
-weekdayToClass weekday =
-    case weekday of
-        2 ->
-            "col-start-2 col-span-1"
-
-        3 ->
-            "col-start-3 col-span-1"
-
-        4 ->
-            "col-start-4 col-span-1"
-
-        5 ->
-            "col-start-5 col-span-1"
-
-        6 ->
-            "col-start-6 col-span-1"
-
-        7 ->
-            "col-start-7 col-span-1"
-
-        8 ->
-            "col-start-8 col-span-1"
-
-        _ ->
-            "hidden"
-
-
-periodToClass : ( Int, Int ) -> String
-periodToClass ( begin, end ) =
-    let
-        beginClass =
-            case begin of
-                1 ->
-                    "row-start-2"
-
-                2 ->
-                    "row-start-3"
-
-                3 ->
-                    "row-start-4"
-
-                4 ->
-                    "row-start-5"
-
-                5 ->
-                    "row-start-6"
-
-                6 ->
-                    "row-start-7"
-
-                7 ->
-                    "row-start-8"
-
-                8 ->
-                    "row-start-9"
-
-                9 ->
-                    "row-start-10"
-
-                10 ->
-                    "row-start-11"
-
-                11 ->
-                    "row-start-12"
-
-                12 ->
-                    "row-start-13"
-
-                13 ->
-                    "row-start-14"
-
-                14 ->
-                    "row-start-15"
-
-                15 ->
-                    "row-start-16"
-
-                16 ->
-                    "row-start-17"
-
-                17 ->
-                    "row-start-18"
-
-                _ ->
-                    "hidden"
-
-        endClass =
-            case end of
-                1 ->
-                    "row-end-3"
-
-                2 ->
-                    "row-end-4"
-
-                3 ->
-                    "row-end-5"
-
-                4 ->
-                    "row-end-6"
-
-                5 ->
-                    "row-end-7"
-
-                6 ->
-                    "row-end-8"
-
-                7 ->
-                    "row-end-9"
-
-                8 ->
-                    "row-end-10"
-
-                9 ->
-                    "row-end-11"
-
-                10 ->
-                    "row-end-12"
-
-                11 ->
-                    "row-end-13"
-
-                12 ->
-                    "row-end-14"
-
-                13 ->
-                    "row-end-15"
-
-                14 ->
-                    "row-end-16"
-
-                15 ->
-                    "row-end-17"
-
-                16 ->
-                    "row-end-18"
-
-                17 ->
-                    "row-end-19"
-
-                _ ->
-                    "hidden"
-    in
-    beginClass ++ " " ++ endClass
+    toString day ++ "/" ++ toString month
 
 
 isLeapYear : Int -> Bool
@@ -753,3 +509,8 @@ posixToWeekNumber ( posix, zone ) =
 
     else
         w
+
+
+dayToMillis : Int -> Int
+dayToMillis day =
+    day * 86400000

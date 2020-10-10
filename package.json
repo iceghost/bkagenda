@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.html",
   "scripts": {
-    "dev": "elm-live src/Main.elm --hot -- --debug --output=public/elm.js"
+    "dev": "elm-live src/Main.elm --host=0.0.0.0 --hot -- --debug --output=public/elm.js"
   },
   "keywords": [],
   "author": "",
