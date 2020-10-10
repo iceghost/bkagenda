@@ -3,7 +3,7 @@ port module Main exposing (Model, Msg, init, subscriptions, update, view)
 import Browser
 import Heroicons.Outline exposing (chevronLeft, chevronRight, clock, locationMarker)
 import Html exposing (..)
-import Html.Attributes exposing (class, placeholder, preload, value)
+import Html.Attributes exposing (class, href, placeholder, preload, src, value)
 import Html.Events exposing (onClick, onInput)
 import Svg.Attributes as SvgAttr
 import Task exposing (Task)
@@ -151,7 +151,7 @@ rawToCourses raw =
                                 rawWeeks |> String.split "|" |> List.filterMap String.toInt
 
                             weekday =
-                                defaultZero rawWeekday
+                                defaultZero rawWeekday - 1
 
                             period =
                                 case String.split "-" rawPeriod of
@@ -239,7 +239,7 @@ viewCourses currentTime courses =
             dayOfWeek currentTime
 
         header =
-            div [ class "flex flex-col bg-gradient-to-t from-blue-600 to-blue-700 text-white" ]
+            div [ class "flex flex-col bg-gradient-to-b from-blue-800 to-blue-700 text-white" ]
                 [ div [ class "flex items-center justify-center gap-2 py-2" ]
                     [ button
                         [ class "rounded bg-blue-500 shadow-md"
@@ -260,7 +260,7 @@ viewCourses currentTime courses =
                 ]
 
         footer =
-            div [ class "flex flex-col items-center bg-blue-600 text-white p-2" ]
+            div [ class "flex flex-col items-center bg-blue-700 text-white p-2" ]
                 [ button [ class "underline", onClick (GotRaw "") ] [ text "Nhập lại TKB tại đây" ]
                 , p [ class "text-sm font-thin " ] [ text "Made with love by a K20 ❤" ]
                 ]
@@ -269,7 +269,14 @@ viewCourses currentTime courses =
             courses |> List.filter (\{ weekday, weeks } -> List.member thisWeek weeks && weekday == thisWeekday)
     in
     [ header
-    , div [ class "flex flex-col gap-1" ] (List.map viewCourse todayCourses)
+    , if todayCourses == [] then
+        div [ class "flex flex-col items-center gap-4" ]
+            [ span [ class "text-3xl font-thin"] [ text "Hôm nay không có môn nào cả. Xõa đi!" ]
+            , img [ class "w-1/2", src "public/img/chilling.svg" ] []
+            ]
+
+      else
+        div [ class "flex flex-col gap-2" ] (List.map viewCourse todayCourses)
     , footer
     ]
 
@@ -278,7 +285,7 @@ viewCourse : Course -> Html Msg
 viewCourse { name, period, weekday, room, time } =
     div
         [ class "flex flex-col gap-1 p-2 text-blue-900"
-        , class "bg-gradient-to-r from-blue-400 to-blue-300"
+        , class "bg-gradient-to-tl from-blue-500 to-blue-400"
         ]
         [ span [ class "font-semibold" ] [ text name ]
         , div [ class "flex flex-row items-center gap-1" ]
@@ -327,7 +334,7 @@ viewWeekdays ( posix, zone ) =
                                 )
                             ]
                         ]
-                    , span [ class "font-thin text-white"] [ text (timeToString ( thisPosix, zone )) ]
+                    , span [ class "font-thin text-white" ] [ text (timeToString ( thisPosix, zone )) ]
                     ]
             )
             (List.range 1 7)

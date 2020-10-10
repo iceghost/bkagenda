@@ -5328,7 +5328,7 @@ var $author$project$Main$rawToCourses = function (raw) {
 						return _Utils_Tuple2(0, 0);
 					}
 				}();
-				var weekday = defaultZero(rawWeekday);
+				var weekday = defaultZero(rawWeekday) - 1;
 				return $elm$core$Maybe$Just(
 					A7($author$project$Main$Course, id, name, weekday, period, rawTime, room, weeks));
 			} else {
@@ -5677,6 +5677,7 @@ var $elm$core$List$filter = F2(
 			_List_Nil,
 			list);
 	});
+var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$core$List$any = F2(
 	function (isOkay, list) {
 		any:
@@ -5834,6 +5835,12 @@ var $author$project$Main$posixToWeekNumber = function (_v0) {
 		weeks(year)) > 0) ? 1 : w);
 };
 var $elm$html$Html$span = _VirtualDom_node('span');
+var $elm$html$Html$Attributes$src = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'src',
+		_VirtualDom_noJavaScriptOrHtmlUri(url));
+};
 var $jasonliang_dev$elm_heroicons$Heroicons$Outline$clock = function (attrs) {
 	return A2(
 		$elm$svg$Svg$svg,
@@ -5909,7 +5916,7 @@ var $author$project$Main$viewCourse = function (_v0) {
 		_List_fromArray(
 			[
 				$elm$html$Html$Attributes$class('flex flex-col gap-1 p-2 text-blue-900'),
-				$elm$html$Html$Attributes$class('bg-gradient-to-r from-blue-400 to-blue-300')
+				$elm$html$Html$Attributes$class('bg-gradient-to-tl from-blue-500 to-blue-400')
 			]),
 		_List_fromArray(
 			[
@@ -6112,7 +6119,7 @@ var $author$project$Main$viewCourses = F2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('flex flex-col bg-gradient-to-t from-blue-600 to-blue-700 text-white')
+					$elm$html$Html$Attributes$class('flex flex-col bg-gradient-to-b from-blue-800 to-blue-700 text-white')
 				]),
 			_List_fromArray(
 				[
@@ -6174,7 +6181,7 @@ var $author$project$Main$viewCourses = F2(
 			$elm$html$Html$div,
 			_List_fromArray(
 				[
-					$elm$html$Html$Attributes$class('flex flex-col items-center bg-blue-600 text-white p-2')
+					$elm$html$Html$Attributes$class('flex flex-col items-center bg-blue-700 text-white p-2')
 				]),
 			_List_fromArray(
 				[
@@ -6204,11 +6211,37 @@ var $author$project$Main$viewCourses = F2(
 		return _List_fromArray(
 			[
 				header,
-				A2(
+				_Utils_eq(todayCourses, _List_Nil) ? A2(
 				$elm$html$Html$div,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$class('flex flex-col gap-1')
+						$elm$html$Html$Attributes$class('flex flex-col items-center gap-4')
+					]),
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$span,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('text-3xl font-thin')
+							]),
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Hôm nay không có môn nào cả. Xõa đi!')
+							])),
+						A2(
+						$elm$html$Html$img,
+						_List_fromArray(
+							[
+								$elm$html$Html$Attributes$class('w-1/2'),
+								$elm$html$Html$Attributes$src('public/img/chilling.svg')
+							]),
+						_List_Nil)
+					])) : A2(
+				$elm$html$Html$div,
+				_List_fromArray(
+					[
+						$elm$html$Html$Attributes$class('flex flex-col gap-2')
 					]),
 				A2($elm$core$List$map, $author$project$Main$viewCourse, todayCourses)),
 				footer
